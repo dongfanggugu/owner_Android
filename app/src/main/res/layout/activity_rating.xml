@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_rating"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.honyum.owner.activity.common.RatingActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="评价" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/MyRatingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:isIndicator="false"
+            android:stepSize="1.0" />
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_rating_describe"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_infowindow_bg"
+        android:gravity="top"
+        android:hint="请提出你宝贵的意见"
+        android:padding="8dp"
+        android:textColorHint="@color/divider"
+        android:textSize="15sp" />
+
+</LinearLayout>

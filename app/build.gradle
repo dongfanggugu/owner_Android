@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    signingConfigs {
+        release {
+            storeFile file('key/honyum.keystore')
+            keyAlias 'honyum'
+            keyPassword 'honyum'
+            storePassword 'honyum'
+        }
+        debug {
+            storeFile file('key/debug.keystore')
+        }
+    }
+
+    compileSdkVersion 25
+    buildToolsVersion '25.0.3'
+
+
+    defaultConfig {
+        applicationId "com.honyum.owner"
+        minSdkVersion 17
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+//        ndk {
+//            //选择要添加的对应cpu类型的.so库。
+//            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64', 'arm64-v8a'
+//            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+//        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "47418d621c26447346a769b3", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+        ]
+    }
+
+
+    productFlavors {
+        debug_flavor {
+            manifestPlaceholders = [MAP_VALUE: "qixd5GDDOKZAduvhO4rv2mkxFWkdmKEi"]
+            signingConfig signingConfigs.debug
+            applicationId "com.honyum.owner"
+        }
+
+        release_flavor {
+            manifestPlaceholders = [MAP_VALUE: "yLlqWt8VxLa1wber2qN9lRSwlWUkOzhG"]
+            signingConfig signingConfigs.release
+            applicationId "com.honyum.owner"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:v2.0.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'cn.jiguang.sdk:jpush:3.0.0'
+    compile 'cn.jiguang.sdk:jcore:1.0.0'
+    compile 'com.github.chrisbanes.photoview:library:1.2.4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-v4:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.android.support:design:26.0.0-alpha1'
+}

@@ -1,0 +1,35 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorPrimaryDark">@color/title_bar</item>
+    </style>
+
+
+    <style name="WelcomeTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+    <style name="popupWindowAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/anim_popupwindow_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_popupwindow_dismiss</item>
+    </style>
+
+    <style name="MyRatingBarStyle" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/layer_rating_bar</item>
+        <item name="android:minHeight">@dimen/rating_star_size</item>
+        <item name="android:maxHeight">@dimen/rating_star_size</item>
+        <item name="android:numStars">5</item>
+    </style>
+
+</resources>
