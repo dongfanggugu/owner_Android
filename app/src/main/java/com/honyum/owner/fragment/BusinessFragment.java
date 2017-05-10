@@ -112,6 +112,8 @@ public class BusinessFragment extends Fragment {
     private void requestBanner() {
         String server = mActivity.getConfig().getServer() + NetConstant.GET_BANNER;
 
+
+
         String request = Constant.EMPTY_REQUEST;
 
         NetTask netTask = new NetTask(server, request) {

@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height" />
 
+    <!--
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,6 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:background="@color/divider" />
+
+        -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -246,7 +249,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -260,97 +264,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            android:paddingLeft="15dp"/>
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:visibility="visible">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="电梯型号" />
-
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/et_elevator_model"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@null"
-            android:hint="请输入电梯型号"
-            android:maxLength="20"
-            android:paddingLeft="20dp"
-            android:textColorHint="@color/divider"
-            android:textSize="15sp" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/divider"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="小区名称" />
-
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/et_cell_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:background="@null"
-            android:hint="请输入小区名称"
-            android:maxLength="20"
-            android:paddingLeft="20dp" />
-
-    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -377,7 +295,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="详细地址" />
+                android:text="别墅地址" />
 
         </LinearLayout>
 

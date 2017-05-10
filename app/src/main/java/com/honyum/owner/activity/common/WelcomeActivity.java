@@ -30,6 +30,6 @@ public class WelcomeActivity extends BaseActivity {
                 startActivity(new Intent(WelcomeActivity.this, HomePageActivity.class));
                 finish();
             }
-        }, 4000);
+        }, 5000);
     }
 }

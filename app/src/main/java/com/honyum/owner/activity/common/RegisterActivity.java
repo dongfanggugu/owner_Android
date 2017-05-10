@@ -69,12 +69,10 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void initView() {
-        final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
+       // final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
         final EditText etName = (EditText) findViewById(R.id.et_name);
         final EditText etTel = (EditText) findViewById(R.id.et_tel);
         spEtBrand = (Spinner) findViewById(R.id.sp_elevator_brand);
-        final EditText etEtModel = (EditText) findViewById(R.id.et_elevator_model);
-        final EditText etCellName = (EditText) findViewById(R.id.et_cell_name);
         final EditText etAddress = (EditText) findViewById(R.id.et_cell_address);
         final EditText etPwd1 = (EditText) findViewById(R.id.et_pwd1);
         final EditText etPwd2 = (EditText) findViewById(R.id.et_pwd2);
@@ -100,18 +98,16 @@ public class RegisterActivity extends BaseActivity {
         findViewById(R.id.tv_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerOwner(etUserName.getText().toString(), etName.getText().toString(),
-                        etTel.getText().toString(), etEtModel.getText().toString(),
-                        etCellName.getText().toString(), etAddress.getText().toString(),
+                registerOwner(etName.getText().toString(),
+                        etTel.getText().toString(), etAddress.getText().toString(),
                         etPwd1.getText().toString(), etPwd2.getText().toString());
             }
         });
     }
 
-    private void registerOwner(String userName, String name, final String tel, String model,
-                               String cellName, String address, String pwd1, final String pwd2) {
+    private void registerOwner(String name, final String tel, String address, String pwd1, final String pwd2) {
 
-        if (Utils.isEmpty(userName) || Utils.isEmpty(name) || Utils.isEmpty(tel)
+        if (Utils.isEmpty(name) || Utils.isEmpty(tel)
                 || Utils.isEmpty(tvAddress.getText().toString())
                 || Utils.isEmpty(pwd1) || Utils.isEmpty(pwd2)) {
             showToast("信息填写不完整!");
@@ -139,12 +135,9 @@ public class RegisterActivity extends BaseActivity {
         RequestHead head = new RequestHead();
         RegisterRequest.RegisterReqBody body = request.new RegisterReqBody();
 
-        body.setLoginname(userName);
         body.setName(name);
         body.setTel(tel);
         body.setBrand(((ElevatorInfo) spEtBrand.getSelectedItem()).getName());
-        body.setModel(model);
-//        body.setCellName(cellName);
         body.setAddress(tvAddress.getText() + address);
         body.setPassword(Utils.encryptMD5(pwd2));
         body.setLat(lat);

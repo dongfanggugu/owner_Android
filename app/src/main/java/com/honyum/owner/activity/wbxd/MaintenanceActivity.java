@@ -113,12 +113,15 @@ public class MaintenanceActivity extends BaseActivity {
                     .setText(R.id.wbnr, mtTypeInfo.getContent())
                     .setText(R.id.wbjg, "￥" + mtTypeInfo.getPrice());
 
-            if ("1".equals(mtTypeInfo.getId()))
+            if ("1".equals(mtTypeInfo.getId())) {
                 vh.setImageResource(R.id.iv_bg, R.mipmap.icon_level_3);
-            else if ("2".equals(mtTypeInfo.getId()))
+
+            } else if ("2".equals(mtTypeInfo.getId())) {
                 vh.setImageResource(R.id.iv_bg, R.mipmap.icon_level_2);
-            else if ("3".equals(mtTypeInfo.getId()))
+
+            } else if ("3".equals(mtTypeInfo.getId())) {
                 vh.setImageResource(R.id.iv_bg, R.mipmap.icon_level_1);
+            }
         }
     }
 }
