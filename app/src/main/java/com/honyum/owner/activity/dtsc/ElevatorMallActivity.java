@@ -24,7 +24,10 @@ public class ElevatorMallActivity extends BaseActivity {
         findViewById(R.id.ll_ztxs).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ElevatorMallActivity.this, EMztxsActivity.class));
+
+                Intent intent = new Intent(ElevatorMallActivity.this, MarketWebViewActivity.class);
+                intent.putExtra("type", "lift");
+                startActivity(intent);
             }
         });
 
@@ -38,7 +41,9 @@ public class ElevatorMallActivity extends BaseActivity {
         findViewById(R.id.ll_dtzh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ElevatorMallActivity.this, EMdtzhActivity.class));
+                Intent intent = new Intent(ElevatorMallActivity.this, MarketWebViewActivity.class);
+                intent.putExtra("type", "decorate");
+                startActivity(intent);
             }
         });
     }

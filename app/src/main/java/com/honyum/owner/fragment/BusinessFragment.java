@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.honyum.owner.R;
+import com.honyum.owner.activity.dtcs.HelpWebViewActivity;
 import com.honyum.owner.activity.jxxd.AddRepair2Activity;
 import com.honyum.owner.activity.jxxd.AddRepairActivity;
 import com.honyum.owner.activity.dtsc.ElevatorMallActivity;
@@ -90,7 +91,7 @@ public class BusinessFragment extends Fragment {
         mView.findViewById(R.id.ll_elevator_nous).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mActivity, HelpCenterActivity.class));
+                startActivity(new Intent(mActivity, HelpWebViewActivity.class));
             }
         });
 

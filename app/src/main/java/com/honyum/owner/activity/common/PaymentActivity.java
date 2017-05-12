@@ -26,7 +26,7 @@ public class PaymentActivity extends BaseActivity {
         String url = getIntent().getStringExtra("url");
 
         webView = (WebView) findViewById(R.id.webView);
-       // webView.loadUrl(url);
+        webView.loadUrl(url);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);

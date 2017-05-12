@@ -53,7 +53,7 @@
             android:autoLink="phone"
             android:background="@drawable/shape_white_bottom_corners_bg"
             android:gravity="center"
-            android:text="业务联系电话\t\t400-6015-365" />
+            android:text="整梯销售" />
 
     </LinearLayout>
 
@@ -97,7 +97,7 @@
             android:autoLink="phone"
             android:background="@drawable/shape_white_bottom_corners_bg"
             android:gravity="center"
-            android:text="业务联系电话\t\t400-6015-365" />
+            android:text="电梯配件" />
 
     </LinearLayout>
 
@@ -141,7 +141,7 @@
             android:autoLink="phone"
             android:background="@drawable/shape_white_bottom_corners_bg"
             android:gravity="center"
-            android:text="业务联系电话\t\t400-6015-365" />
+            android:text="电梯装潢" />
 
     </LinearLayout>
 
