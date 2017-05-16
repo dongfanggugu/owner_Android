@@ -66,7 +66,17 @@ public class LiftMessageActivity extends BaseActivity {
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
 
+        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
         webView.setWebChromeClient(new MyWebChromeClient());
+
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });
     }
 
     private class MyWebChromeClient extends WebChromeClient {

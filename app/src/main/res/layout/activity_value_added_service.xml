@@ -13,11 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_bar_height" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@mipmap/banner1" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

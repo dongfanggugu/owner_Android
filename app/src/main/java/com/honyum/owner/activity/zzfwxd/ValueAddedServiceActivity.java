@@ -68,6 +68,11 @@ public class ValueAddedServiceActivity extends BaseActivity {
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void SimpleOnItemClick(BaseQuickAdapter adapter, View view, int i) {
+
+                if (i > 0) {
+                    showToast("功能开发中,敬请期待");
+                    return;
+                }
                 IncrementType item = (IncrementType) adapter.getItem(i);
                 if (Utils.isEmpty(getConfig().getUserId())) {
                     Intent intent = new Intent(ValueAddedServiceActivity.this, AddIncrementActivity.class);
