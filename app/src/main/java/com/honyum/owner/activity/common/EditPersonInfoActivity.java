@@ -3,6 +3,7 @@ package com.honyum.owner.activity.common;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.honyum.owner.R;
 import com.honyum.owner.base.BaseActivity;
@@ -27,14 +28,18 @@ public class EditPersonInfoActivity extends BaseActivity {
 
         final EditText et = (EditText) findViewById(R.id.et_content);
 
+        final TextView tvTip = (TextView) findViewById(R.id.tv_tip);
+
         String title = "";
 
         if (editType == 0) {
             title = "修改姓名";
             et.setText(getConfig().getName());
+            tvTip.setText("姓名:");
         } else if (editType == 1) {
             title = "修改电梯型号";
             et.setText(getConfig().getModel());
+            tvTip.setText("型号:");
         }
 
         initTitleBar(R.id.title, title, R.mipmap.back, backClickListener,

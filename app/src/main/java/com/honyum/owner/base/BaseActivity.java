@@ -516,4 +516,14 @@ public class BaseActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    public boolean isLogin() {
+        String userId = getConfig().getUserId();
+
+        if (Utils.isEmpty(userId)) {
+            return false;
+        }
+
+        return true;
+    }
 }

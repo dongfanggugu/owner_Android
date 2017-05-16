@@ -38,6 +38,7 @@ public class MaintenanceActivity extends BaseActivity {
         initView();
 
         requestMt();
+
     }
 
     private void requestMt() {

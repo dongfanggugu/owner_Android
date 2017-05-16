@@ -21,6 +21,7 @@ import com.honyum.owner.activity.dtsc.ElevatorMallActivity;
 import com.honyum.owner.activity.dtcs.HelpCenterActivity;
 import com.honyum.owner.activity.bxxd.InsuranceActivity;
 import com.honyum.owner.activity.wbxd.MaintenanceActivity;
+import com.honyum.owner.activity.wbxd.NearMaintenanceActivity;
 import com.honyum.owner.activity.zzfwxd.ValueAddedServiceActivity;
 import com.honyum.owner.adapter.BannerAdapter;
 import com.honyum.owner.base.BaseActivity;
@@ -66,7 +67,9 @@ public class BusinessFragment extends Fragment {
         mView.findViewById(R.id.ll_maintenance).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(mActivity, MaintenanceActivity.class));
+               // startActivity(new Intent(mActivity, MaintenanceActivity.class));
+
+                startActivity(new Intent(mActivity, NearMaintenanceActivity.class));
             }
         });
 

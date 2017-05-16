@@ -60,6 +60,7 @@ public class LocationService extends Service {
                 intent.putExtra("success", true);
                 intent.putExtra("lat", bdLocation.getLatitude());
                 intent.putExtra("lng", bdLocation.getLongitude());
+                intent.putExtra("address", bdLocation.getAddrStr());
                 sendBroadcast(intent);
             } else {
                 //定位失败了

@@ -25,7 +25,7 @@ public class NetConstant {
     /**
      * 请求所有的维保项目
      */
-    public static final String GET_ALL_COMMUNITYS_BY_PROPERTY = "getAllCommunitysByProperty";
+    public static final String GET_ALL_COMMUNITYS_BY_PROPERTY = "getAllCommunitysByPropertyOnOwner";
 
     /**
      * 添加报修
