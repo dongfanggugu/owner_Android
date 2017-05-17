@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.honyum.owner.R;
 import com.honyum.owner.base.BaseActivity;
@@ -49,15 +50,22 @@ public class MarketWebViewActivity extends BaseActivity {
         if (type.equals("lift")) {
 
             initTitleBar(R.id.title, "整梯销售", R.mipmap.back, backClickListener,
-                    R.drawable.icon_phone, rightClickListener);
+                    null, null);
             url = getConfig().getIp() + "h5/indexPage";
         } else {
 
             initTitleBar(R.id.title, "电梯装潢", R.mipmap.back, backClickListener,
-                    R.drawable.icon_phone, rightClickListener);
+                    null, null);
 
             url = getConfig().getIp() + "h5/indexelevatorDecorationPage";
         }
+
+        View titleView = findViewById(R.id.title);
+
+        TextView right = (TextView) titleView.findViewById(R.id.tv_right);
+        right.setText("联系我们");
+
+        right.setOnClickListener(rightClickListener);
 
         webView.loadUrl(url);
 

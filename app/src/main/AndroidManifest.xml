@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.honyum.owner"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="16"
+          android:versionCode="101"
           android:versionName="@string/app_version">
 
     <!-- 百度地图所需权限 -->
@@ -226,8 +226,11 @@
         </activity>
         <activity android:name=".activity.dtsc.LiftMessageActivity">
         </activity>
-
         <activity android:name=".activity.wbxd.NearMaintenanceActivity"/>
+        <activity android:name=".activity.common.CommonWebActivity">
+        </activity>
+        <activity android:name=".activity.common.ForgetActivity">
+        </activity>
     </application>
 
 </manifest>

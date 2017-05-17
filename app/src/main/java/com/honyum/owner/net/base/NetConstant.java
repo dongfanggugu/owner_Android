@@ -176,4 +176,9 @@ public class NetConstant {
      * 获取增值服务历史订单
      */
     public static final String GET_INCREMENT_HISTORY_ORDER_LIST = "getIncrementHistoryListByOwner";
+
+    /**
+     * 忘记密码
+     */
+    public static final String URL_PWD_FORGET = "pwdForget";
 }

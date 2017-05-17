@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.honyum.owner.R;
+import com.honyum.owner.activity.common.ForgetActivity;
 import com.honyum.owner.activity.common.RegisterActivity;
 import com.honyum.owner.base.BaseActivity;
 import com.honyum.owner.net.LoginRequest;
@@ -53,6 +54,14 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.forget_pwd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgetActivity.class);
                 startActivity(intent);
             }
         });

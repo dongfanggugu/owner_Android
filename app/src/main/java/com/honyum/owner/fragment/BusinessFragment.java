@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.honyum.owner.R;
+import com.honyum.owner.activity.common.CommonWebActivity;
 import com.honyum.owner.activity.dtcs.HelpWebViewActivity;
 import com.honyum.owner.activity.jxxd.AddRepair2Activity;
 import com.honyum.owner.activity.jxxd.AddRepairActivity;
@@ -109,6 +110,28 @@ public class BusinessFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mActivity, ValueAddedServiceActivity.class));
+            }
+        });
+
+        mView.findViewById(R.id.iv_expert).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, CommonWebActivity.class);
+                intent.putExtra("title", "专家团队");
+                intent.putExtra("url", mActivity.getConfig().getIp() + "static/h5/expert.html");
+
+                startActivity(intent);
+            }
+        });
+
+        mView.findViewById(R.id.iv_honyum).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mActivity, CommonWebActivity.class);
+                intent.putExtra("title", "中建华宇");
+                intent.putExtra("url", mActivity.getConfig().getIp() + "static/h5/honyum.html");
+
+                startActivity(intent);
             }
         });
     }

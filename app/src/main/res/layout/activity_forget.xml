@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.honyum.owner.activity.dtcs.HelpWebViewActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height" />
+
+    <EditText
+        android:id="@+id/et_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:inputType="phone"
+        android:layout_margin="20dp"
+        android:background="@drawable/shape_edit_text_around"
+        android:hint="请输入您注册时的手机号码"
+        android:textSize="13sp"
+        />
+
+
+    <TextView
+        android:id="@+id/btn_forget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:background="@drawable/shape_btn_around"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:text="忘记密码"
+        android:gravity="center"
+        />
+
+</LinearLayout>
