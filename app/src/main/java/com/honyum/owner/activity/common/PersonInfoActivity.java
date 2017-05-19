@@ -1,6 +1,8 @@
 package com.honyum.owner.activity.common;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,12 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.honyum.owner.R;
+import com.honyum.owner.activity.wbxd.AddMtOrderActivity;
 import com.honyum.owner.adapter.ElevatorBrandRecyAdapter;
 import com.honyum.owner.base.BaseActivity;
 import com.honyum.owner.base.Constant;
@@ -46,6 +53,8 @@ public class PersonInfoActivity extends BaseActivity {
 
     private Uri cameraUri;
 
+    private TextView mTvBrand;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +68,7 @@ public class PersonInfoActivity extends BaseActivity {
     }
 
     private void initView() {
-        initTitleBar(R.id.title, "个人设置", R.mipmap.back, backClickListener, 0, null);
+        initTitleBar(R.id.title, "基本资料", R.mipmap.back, backClickListener, 0, null);
 
         CircleImageView ivAvatar = (CircleImageView) findViewById(R.id.iv_avatar);
         File avatarFile = new File(Utils.getUserAvatarPath(), getConfig().getUserId() + ".jpg");
@@ -70,12 +79,12 @@ public class PersonInfoActivity extends BaseActivity {
         }
 
 
-        findViewById(R.id.ll_setting_avatar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPopupWindow();
-            }
-        });
+//        findViewById(R.id.ll_setting_avatar).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPopupWindow();
+//            }
+//        });
 
 //        TextView tvUserName = (TextView) findViewById(R.id.tv_user_name);
 //        tvUserName.setText(getConfig().getUserName());
@@ -90,8 +99,14 @@ public class PersonInfoActivity extends BaseActivity {
         TextView tvTel = (TextView) findViewById(R.id.tv_owner_tel);
         tvTel.setText(getConfig().getTel());
 
-        final TextView tvEtBrand = (TextView) findViewById(R.id.tv_et_brand);
-        tvEtBrand.setText(getConfig().getBrand());
+        TextView tvLinkName = (TextView) findViewById(R.id.tv_link_name);
+        tvLinkName.setText(getConfig().getLinkName());
+
+        TextView tvLinkTel = (TextView) findViewById(R.id.tv_link_tel);
+        tvLinkTel.setText(getConfig().getLinkTel());
+
+        mTvBrand = (TextView) findViewById(R.id.tv_et_brand);
+        mTvBrand.setText(getConfig().getBrand());
 
         TextView tvEtModel = (TextView) findViewById(R.id.tv_et_model);
         if (Utils.isEmpty(getConfig().getModel())) {
@@ -115,10 +130,24 @@ public class PersonInfoActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.ll_link_name).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonInfoActivity.this, LinkModifyActivity.class));
+            }
+        });
+
+        findViewById(R.id.ll_link_tel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonInfoActivity.this, LinkModifyActivity.class));
+            }
+        });
+
         findViewById(R.id.ll_elevator_brand).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showEditBrandDialog(tvEtBrand);
+                requestBrand();
             }
         });
 
@@ -147,43 +176,8 @@ public class PersonInfoActivity extends BaseActivity {
         });
     }
 
-    private void showEditBrandDialog(final TextView tvEtBrand) {
-        String server = getConfig().getServer() + NetConstant.GET_ELEVATOR_BRAND;
-        String request = Constant.EMPTY_REQUEST;
 
-        NetTask netTask = new NetTask(server, request) {
-            @Override
-            protected void onResponse(NetTask task, String result) {
-                ElevatorBrandResponse response = ElevatorBrandResponse.getResult(result);
-                ElevatorBrandRecyAdapter adapter
-                        = new ElevatorBrandRecyAdapter(response.getBody());
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(PersonInfoActivity.this);
-                final AlertDialog dialog = builder.create();
-                View view = LayoutInflater.from(PersonInfoActivity.this)
-                        .inflate(R.layout.layout_elevator_brand, null);
-
-                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(PersonInfoActivity.this));
-                recyclerView.setAdapter(adapter);
-                recyclerView.addOnItemTouchListener(new OnItemClickListener() {
-                    @Override
-                    public void SimpleOnItemClick(BaseQuickAdapter adapter, View view, int i) {
-                        dialog.dismiss();
-                        ElevatorInfo info = (ElevatorInfo) adapter.getItem(i);
-                        submitEdit(info.getName(), tvEtBrand);
-                    }
-                });
-
-                dialog.setView(view);
-                dialog.show();
-            }
-        };
-
-        addBackGroundTask(netTask);
-    }
-
-    private void submitEdit(final String elBrand, final TextView tvElBrand) {
+    private void submitEdit(final String brand) {
 
         String server = getConfig().getServer() + NetConstant.EDIT_PERSON_INFO;
 
@@ -195,7 +189,7 @@ public class PersonInfoActivity extends BaseActivity {
         head.setAccessToken(getConfig().getToken());
         head.setUserId(getConfig().getUserId());
 
-        body.setBrand(elBrand);
+        body.setBrand(brand);
 
         request.setHead(head);
         request.setBody(body);
@@ -203,8 +197,8 @@ public class PersonInfoActivity extends BaseActivity {
         NetTask netTask = new NetTask(server, request) {
             @Override
             protected void onResponse(NetTask task, String result) {
-                tvElBrand.setText(elBrand);
-                getConfig().setBrand(elBrand);
+                mTvBrand.setText(brand);
+                getConfig().setBrand(brand);
             }
         };
 
@@ -355,5 +349,145 @@ public class PersonInfoActivity extends BaseActivity {
                 .getAttributes();
         lp.alpha = bgAlpha;
         this.getWindow().setAttributes(lp);
+    }
+
+    private void requestBrand() {
+        String server = getConfig().getServer() + NetConstant.GET_ELEVATOR_BRAND;
+        String request = Constant.EMPTY_REQUEST;
+
+        NetTask netTask = new NetTask(server, request) {
+            @Override
+            protected void onResponse(NetTask task, String result) {
+                ElevatorBrandResponse response = ElevatorBrandResponse.getResult(result);
+                showBrandListDialog(response.getBody());
+            }
+        };
+
+        addBackGroundTask(netTask);
+    }
+
+    private void showBrandListDialog(List<ElevatorInfo> infoList) {
+        View view = View.inflate(this, R.layout.layout_dialog_list, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initListDialogView(dialog, view, infoList);
+
+        dialog.show();
+    }
+
+    private void initListDialogView(final Dialog dialog, View view, List<ElevatorInfo> infoList) {
+
+        ListView listView = (ListView) view.findViewById(R.id.listView);
+        ListViewAdapter adapter = new ListViewAdapter(this, infoList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                ElevatorInfo info = (ElevatorInfo) view.getTag();
+
+                if (info.getName().equals("其他")) {
+                    showEditDialog();
+
+                } else {
+                    submitEdit(info.getName());
+                }
+
+            }
+        });
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void showEditDialog() {
+
+        View view = View.inflate(this, R.layout.layout_edit_dialog, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initDialogView(dialog, view);
+
+        dialog.show();
+
+    }
+
+    private void initDialogView(final Dialog dialog, final View view) {
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText etBrand = (EditText) view.findViewById(R.id.et_brand);
+                String brand = etBrand.getText().toString();
+
+                if (Utils.isEmpty(brand)) {
+                    showToast("请填写您的电梯品牌");
+                    return;
+                }
+
+                submitEdit(brand);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private class ListViewAdapter extends BaseAdapter {
+
+        private List<ElevatorInfo> infos;
+
+        private Context context;
+
+        public ListViewAdapter(Context context, List<ElevatorInfo> list) {
+            this.context = context;
+            this.infos = list;
+        }
+
+        @Override
+        public int getCount() {
+            return this.infos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.infos.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (null == convertView) {
+                convertView =  View.inflate(this.context, R.layout.layout_textview_item, null);
+            }
+
+            convertView.setTag(this.infos.get(position));
+            TextView tvContent = (TextView) convertView.findViewById(R.id.tv_content);
+
+            tvContent.setText(this.infos.get(position).getName());
+
+            return convertView;
+        }
     }
 }

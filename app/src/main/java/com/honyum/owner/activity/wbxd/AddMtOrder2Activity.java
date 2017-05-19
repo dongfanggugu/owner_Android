@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.honyum.owner.R;
+import com.honyum.owner.activity.common.LinkModifyActivity;
 import com.honyum.owner.activity.common.PaymentActivity;
 import com.honyum.owner.base.BaseActivity;
 import com.honyum.owner.data.AddMtOrderReqBody;
@@ -23,11 +24,19 @@ public class AddMtOrder2Activity extends BaseActivity {
 
     private int frequency = 1;
 
+    private TextView mTvLinkName;
+
+    private TextView mTvLinkTel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_mt_order2);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         initView();
     }
 
@@ -41,8 +50,24 @@ public class AddMtOrder2Activity extends BaseActivity {
         ((TextView) findViewById(R.id.tv_owner_tel)).setText(getConfig().getTel());
         ((TextView) findViewById(R.id.tv_sel_address)).setText(getConfig().getAddress());
 
+
+        mTvLinkName = (TextView) findViewById(R.id.tv_link_name);
+        mTvLinkTel = (TextView) findViewById(R.id.tv_link_tel);
+
+        mTvLinkName.setText(getConfig().getLinkName());
+        mTvLinkTel.setText(getConfig().getLinkTel());
+
+        findViewById(R.id.btn_modify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddMtOrder2Activity.this, LinkModifyActivity.class));
+            }
+        });
+
         final TextView tvWbjg = (TextView) findViewById(R.id.wbjg);
         final TextView tvCount = (TextView) findViewById(R.id.tv_count);
+
+        tvWbjg.setText("￥" + mtInfo.getPrice());
 
         findViewById(R.id.iv_add).setOnClickListener(new View.OnClickListener() {
             @Override

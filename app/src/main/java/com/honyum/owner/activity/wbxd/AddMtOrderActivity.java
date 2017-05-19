@@ -1,21 +1,27 @@
 package com.honyum.owner.activity.wbxd;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.honyum.owner.R;
 import com.honyum.owner.activity.common.AddressSelActivity;
 import com.honyum.owner.activity.common.PaymentActivity;
+import com.honyum.owner.activity.common.RegisterActivity;
 import com.honyum.owner.adapter.ElevatorBrandAdapter;
 import com.honyum.owner.base.BaseActivity;
 import com.honyum.owner.base.Constant;
@@ -39,8 +45,6 @@ public class AddMtOrderActivity extends BaseActivity {
 
     private AddMtOrderReqBody body;
 
-    private Spinner spElevatorBrand;
-
     private String smsCode;
 
     private TextView tvSelAdd;
@@ -51,6 +55,8 @@ public class AddMtOrderActivity extends BaseActivity {
 
     private int frequency = 1;
 
+    private TextView tvBrand;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +66,9 @@ public class AddMtOrderActivity extends BaseActivity {
 
         initView();
 
-        requestElevatorBrand();
     }
 
-    private void requestElevatorBrand() {
+    private void requestBrand() {
         String server = getConfig().getServer() + NetConstant.GET_ELEVATOR_BRAND;
         String request = Constant.EMPTY_REQUEST;
 
@@ -71,10 +76,7 @@ public class AddMtOrderActivity extends BaseActivity {
             @Override
             protected void onResponse(NetTask task, String result) {
                 ElevatorBrandResponse response = ElevatorBrandResponse.getResult(result);
-                ElevatorBrandAdapter adapter =
-                        new ElevatorBrandAdapter(AddMtOrderActivity.this, response.getBody());
-                spElevatorBrand.setAdapter(adapter);
-                body.setBrand(response.getBody().get(0).getName());
+                showBrandListDialog(response.getBody());
             }
         };
 
@@ -89,6 +91,8 @@ public class AddMtOrderActivity extends BaseActivity {
 
         final TextView tvWbjg = (TextView) findViewById(R.id.wbjg);
         final TextView tvCount = (TextView) findViewById(R.id.tv_count);
+
+        tvWbjg.setText("￥" + mtInfo.getPrice());
 
         findViewById(R.id.iv_add).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,18 +112,12 @@ public class AddMtOrderActivity extends BaseActivity {
             }
         });
 
+        tvBrand = (TextView) findViewById(R.id.tv_brand);
 
-        spElevatorBrand = (Spinner) findViewById(R.id.sp_lift_brand);
-        spElevatorBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        tvBrand.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ElevatorInfo info = (ElevatorInfo) parent.getAdapter().getItem(position);
-                body.setBrand(info.getName());
-                brand = info.getName();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onClick(View v) {
+                requestBrand();
             }
         });
 
@@ -154,7 +152,7 @@ public class AddMtOrderActivity extends BaseActivity {
             public void onClick(View v) {
 
                 if (Utils.isEmpty(mtInfo.getId()) || Utils.isEmpty(etOwnerName.getText().toString())
-                        || lat == 0.0 || lng == 0.0 || Utils.isEmpty(body.getBrand())) {
+                        || lat == 0.0 || lng == 0.0) {
                     showToast("请完善用户信息!");
                     return;
                 }
@@ -214,9 +212,24 @@ public class AddMtOrderActivity extends BaseActivity {
     private void addMtOrder(String mainttypeId, final String model, final String name,
                             final String detailAdd, final String tel, String smsCode) {
         if (Utils.isEmpty(mainttypeId) || Utils.isEmpty(name)
-                || Utils.isEmpty(tel) || Utils.isEmpty(body.getBrand())
+                || Utils.isEmpty(tel)
                 || lat == 0.0 || lng == 0.0) {
             showToast("请完善用户信息!");
+            return;
+        }
+
+        if (tvBrand.getText().equals("点击选择电梯品牌")
+                || Utils.isEmpty(tvBrand.getText().toString())) {
+            showToast("请选择您的电梯品牌");
+            return;
+        }
+
+        EditText etLinkName = (EditText) findViewById(R.id.et_link_name);
+        EditText etLinkTel = (EditText) findViewById(R.id.et_link_tel);
+
+        if (Utils.isEmpty(etLinkName.getText().toString())
+                || Utils.isEmpty(etLinkTel.getText().toString())) {
+            showToast("请先写联系人信息!");
             return;
         }
 
@@ -225,10 +238,12 @@ public class AddMtOrderActivity extends BaseActivity {
             return;
         }
 
+
         String server = getConfig().getServer() + NetConstant.ADD_MT_ORDER;
         AddMtOrderRequest request = new AddMtOrderRequest();
         RequestHead head = new RequestHead();
 
+        body.setBrand(tvBrand.getText().toString());
         body.setModel(model);
         body.setAddress(tvSelAdd.getText() + detailAdd);
         body.setMainttypeId(mainttypeId);
@@ -237,6 +252,8 @@ public class AddMtOrderActivity extends BaseActivity {
         body.setLat(lat);
         body.setLng(lng);
         body.setFrequency(frequency);
+        body.setContacts(etLinkName.getText().toString());
+        body.setContactsTel(etLinkTel.getText().toString());
 
         request.setHead(head);
         request.setBody(body);
@@ -306,6 +323,132 @@ public class AddMtOrderActivity extends BaseActivity {
 
             lat = latlng[0];
             lng = latlng[1];
+        }
+    }
+
+    private void showBrandListDialog(List<ElevatorInfo> infoList) {
+        View view = View.inflate(this, R.layout.layout_dialog_list, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initListDialogView(dialog, view, infoList);
+
+        dialog.show();
+    }
+
+    private void initListDialogView(final Dialog dialog, View view, List<ElevatorInfo> infoList) {
+
+        ListView listView = (ListView) view.findViewById(R.id.listView);
+        ListViewAdapter adapter = new ListViewAdapter(this, infoList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                ElevatorInfo info = (ElevatorInfo) view.getTag();
+
+                if (info.getName().equals("其他")) {
+                    showEditDialog();
+
+                } else {
+                    tvBrand.setText(info.getName());
+
+                }
+
+            }
+        });
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void showEditDialog() {
+
+        View view = View.inflate(this, R.layout.layout_edit_dialog, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initDialogView(dialog, view);
+
+        dialog.show();
+
+    }
+
+    private void initDialogView(final Dialog dialog, final View view) {
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText etBrand = (EditText) view.findViewById(R.id.et_brand);
+                String brand = etBrand.getText().toString();
+
+                if (Utils.isEmpty(brand)) {
+                    showToast("请填写您的电梯品牌");
+                    return;
+                }
+
+                tvBrand.setText(brand);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private class ListViewAdapter extends BaseAdapter {
+
+        private List<ElevatorInfo> infos;
+
+        private Context context;
+
+        public ListViewAdapter(Context context, List<ElevatorInfo> list) {
+            this.context = context;
+            this.infos = list;
+        }
+
+        @Override
+        public int getCount() {
+            return this.infos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.infos.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (null == convertView) {
+                convertView =  View.inflate(this.context, R.layout.layout_textview_item, null);
+            }
+
+            convertView.setTag(this.infos.get(position));
+            TextView tvContent = (TextView) convertView.findViewById(R.id.tv_content);
+
+            tvContent.setText(this.infos.get(position).getName());
+
+            return convertView;
         }
     }
 }

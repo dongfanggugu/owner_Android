@@ -25,6 +25,11 @@ public class SettingsActivity extends BaseActivity {
         findViewById(R.id.fl_pwd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (!isLogin()) {
+                    showToast("您需要登录才能修改密码!");
+                    return;
+                }
                 Intent intent = new Intent(SettingsActivity.this, EditPasswordActivity.class);
                 startActivity(intent);
             }
@@ -39,6 +44,13 @@ public class SettingsActivity extends BaseActivity {
                         updateApk(remoteVersion, url, isForce, description);
                     }
                 });
+            }
+        });
+
+        findViewById(R.id.fl_about).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, AboutActivity.class));
             }
         });
     }

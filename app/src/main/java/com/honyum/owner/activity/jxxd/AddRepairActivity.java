@@ -2,23 +2,29 @@ package com.honyum.owner.activity.jxxd;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.honyum.owner.R;
 import com.honyum.owner.activity.common.AddressSelActivity;
+import com.honyum.owner.activity.wbxd.AddMtOrderActivity;
 import com.honyum.owner.adapter.ElevatorBrandAdapter;
 import com.honyum.owner.adapter.ElevatorFaultAdapter;
 import com.honyum.owner.base.BaseActivity;
@@ -42,7 +48,7 @@ public class AddRepairActivity extends BaseActivity {
 
     private int time = 60;
 
-    private Spinner spElevatorBrand, spElevatorFault;
+    private Spinner spElevatorFault;
 
     private AddRepairReqBody body;
 
@@ -52,6 +58,8 @@ public class AddRepairActivity extends BaseActivity {
 
     private String smsCode = "-1";
 
+    private TextView tvBrand;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +68,6 @@ public class AddRepairActivity extends BaseActivity {
         body = new AddRepairReqBody();
 
         initView();
-
-        requestElevatorBrand();
 
         requestElevatorFault();
     }
@@ -84,7 +90,7 @@ public class AddRepairActivity extends BaseActivity {
         addBackGroundTask(netTask);
     }
 
-    private void requestElevatorBrand() {
+    private void requestBrand() {
         String server = getConfig().getServer() + NetConstant.GET_ELEVATOR_BRAND;
         String request = Constant.EMPTY_REQUEST;
 
@@ -92,10 +98,7 @@ public class AddRepairActivity extends BaseActivity {
             @Override
             protected void onResponse(NetTask task, String result) {
                 ElevatorBrandResponse response = ElevatorBrandResponse.getResult(result);
-                ElevatorBrandAdapter adapter =
-                        new ElevatorBrandAdapter(AddRepairActivity.this, response.getBody());
-                spElevatorBrand.setAdapter(adapter);
-                body.setBrand(response.getBody().get(0).getName());
+                showBrandListDialog(response.getBody());
             }
         };
 
@@ -103,7 +106,6 @@ public class AddRepairActivity extends BaseActivity {
     }
 
     private void initView() {
-        spElevatorBrand = (Spinner) findViewById(R.id.sp_lift_brand);
         final EditText etElevatorModel = (EditText) findViewById(R.id.et_lift_model);
         spElevatorFault = (Spinner) findViewById(R.id.sp_lift_fault_type);
         final EditText etFaultDescribe = (EditText) findViewById(R.id.et_lift_fault_describe);
@@ -117,15 +119,12 @@ public class AddRepairActivity extends BaseActivity {
         final EditText etOwnerName = (EditText) findViewById(R.id.et_owner_name);
         final EditText etDetailAdd = (EditText) findViewById(R.id.et_detail_address);
 
-        spElevatorBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ElevatorInfo info = (ElevatorInfo) parent.getAdapter().getItem(position);
-                body.setBrand(info.getName());
-            }
+        tvBrand = (TextView) findViewById(R.id.tv_brand);
 
+        tvBrand.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onClick(View v) {
+                requestBrand();
             }
         });
 
@@ -234,6 +233,15 @@ public class AddRepairActivity extends BaseActivity {
             return;
         }
 
+        EditText etLinkName = (EditText) findViewById(R.id.et_link_name);
+        EditText etLinkTel = (EditText) findViewById(R.id.et_link_tel);
+
+        if (Utils.isEmpty(etLinkName.getText().toString())
+                || Utils.isEmpty(etLinkTel.getText().toString())) {
+            showToast("请先写联系人信息!");
+            return;
+        }
+
         if (!this.smsCode.equals(smsCode)) {
             showToast("验证码输入错误,请重新输入!");
             return;
@@ -250,6 +258,10 @@ public class AddRepairActivity extends BaseActivity {
         body.setRepairTime(dateTime);
         body.setLat(lat);
         body.setLat(lng);
+
+        body.setContacts(etLinkName.getText().toString());
+        body.setContactsTel(etLinkTel.getText().toString());
+
         request.setHead(head);
         request.setBody(body);
 
@@ -354,6 +366,132 @@ public class AddRepairActivity extends BaseActivity {
 
             lat = latlng[0];
             lng = latlng[1];
+        }
+    }
+
+    private void showBrandListDialog(List<ElevatorInfo> infoList) {
+        View view = View.inflate(this, R.layout.layout_dialog_list, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initListDialogView(dialog, view, infoList);
+
+        dialog.show();
+    }
+
+    private void initListDialogView(final Dialog dialog, View view, List<ElevatorInfo> infoList) {
+
+        ListView listView = (ListView) view.findViewById(R.id.listView);
+        ListViewAdapter adapter = new ListViewAdapter(this, infoList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                ElevatorInfo info = (ElevatorInfo) view.getTag();
+
+                if (info.getName().equals("其他")) {
+                    showEditDialog();
+
+                } else {
+                    tvBrand.setText(info.getName());
+
+                }
+
+            }
+        });
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void showEditDialog() {
+
+        View view = View.inflate(this, R.layout.layout_edit_dialog, null);
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initDialogView(dialog, view);
+
+        dialog.show();
+
+    }
+
+    private void initDialogView(final Dialog dialog, final View view) {
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText etBrand = (EditText) view.findViewById(R.id.et_brand);
+                String brand = etBrand.getText().toString();
+
+                if (Utils.isEmpty(brand)) {
+                    showToast("请填写您的电梯品牌");
+                    return;
+                }
+
+                tvBrand.setText(brand);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private class ListViewAdapter extends BaseAdapter {
+
+        private List<ElevatorInfo> infos;
+
+        private Context context;
+
+        public ListViewAdapter(Context context, List<ElevatorInfo> list) {
+            this.context = context;
+            this.infos = list;
+        }
+
+        @Override
+        public int getCount() {
+            return this.infos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.infos.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (null == convertView) {
+                convertView =  View.inflate(this.context, R.layout.layout_textview_item, null);
+            }
+
+            convertView.setTag(this.infos.get(position));
+            TextView tvContent = (TextView) convertView.findViewById(R.id.tv_content);
+
+            tvContent.setText(this.infos.get(position).getName());
+
+            return convertView;
         }
     }
 }

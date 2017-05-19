@@ -22,8 +22,8 @@ android {
         applicationId "com.honyum.owner"
         minSdkVersion 17
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+       // versionCode 102
+       // versionName "1.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 //        ndk {

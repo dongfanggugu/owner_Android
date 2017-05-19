@@ -36,6 +36,10 @@ public class EditPersonInfoRequest extends RequestBean {
 
         private String model;
 
+        private String contacts;
+
+        private String contactsTel;
+
         public String getModel() {
             return model;
         }
@@ -90,6 +94,22 @@ public class EditPersonInfoRequest extends RequestBean {
 
         public void setCellName(String cellName) {
             this.cellName = cellName;
+        }
+
+        public String getContacts() {
+            return contacts;
+        }
+
+        public void setContacts(String contacts) {
+            this.contacts = contacts;
+        }
+
+        public String getContactsTel() {
+            return contactsTel;
+        }
+
+        public void setContactsTel(String contactsTel) {
+            this.contactsTel = contactsTel;
         }
     }
 }

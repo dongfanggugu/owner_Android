@@ -2,11 +2,18 @@ package com.honyum.owner.activity.common;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,7 +39,7 @@ public class RegisterActivity extends BaseActivity {
 
     private TextView tvAddress;
 
-    private Spinner spEtBrand;
+    private TextView tvBrand;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +55,17 @@ public class RegisterActivity extends BaseActivity {
 
         initView();
 
-        requestEtBrand();
     }
 
     private void requestEtBrand() {
         String server = getConfig().getServer() + NetConstant.GET_ELEVATOR_BRAND;
-        String request = Constant.EMPTY_REQUEST;
+        final String request = Constant.EMPTY_REQUEST;
 
         NetTask netTask = new NetTask(server, request) {
             @Override
             protected void onResponse(NetTask task, String result) {
                 ElevatorBrandResponse response = ElevatorBrandResponse.getResult(result);
-                ElevatorBrandAdapter adapter =
-                        new ElevatorBrandAdapter(RegisterActivity.this, response.getBody());
-                spEtBrand.setAdapter(adapter);
+                showBrandListDialog(response.getBody());
             }
         };
 
@@ -72,11 +76,19 @@ public class RegisterActivity extends BaseActivity {
        // final EditText etUserName = (EditText) findViewById(R.id.et_user_name);
         final EditText etName = (EditText) findViewById(R.id.et_name);
         final EditText etTel = (EditText) findViewById(R.id.et_tel);
-        spEtBrand = (Spinner) findViewById(R.id.sp_elevator_brand);
         final EditText etAddress = (EditText) findViewById(R.id.et_cell_address);
         final EditText etPwd1 = (EditText) findViewById(R.id.et_pwd1);
         final EditText etPwd2 = (EditText) findViewById(R.id.et_pwd2);
         tvAddress = (TextView) findViewById(R.id.tv_cell_address);
+
+        tvBrand = (TextView) findViewById(R.id.tv_brand);
+
+        tvBrand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestEtBrand();
+            }
+        });
 
         findViewById(R.id.ll_cell_address).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,10 +110,12 @@ public class RegisterActivity extends BaseActivity {
         findViewById(R.id.tv_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 registerOwner(etName.getText().toString(),
                         etTel.getText().toString(), etAddress.getText().toString(),
                         etPwd1.getText().toString(), etPwd2.getText().toString());
             }
+
         });
     }
 
@@ -114,6 +128,11 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
 
+        if (tvBrand.getText().equals("点击选择电梯品牌")
+                || Utils.isEmpty(tvBrand.getText().toString())) {
+            showToast("请选择您的电梯品牌");
+            return;
+        }
         if (!Utils.isMobileNumber(tel)) {
             showToast("手机号码格式不正确!");
             return;
@@ -137,7 +156,7 @@ public class RegisterActivity extends BaseActivity {
 
         body.setName(name);
         body.setTel(tel);
-        body.setBrand(((ElevatorInfo) spEtBrand.getSelectedItem()).getName());
+        body.setBrand(tvBrand.getText().toString());
         body.setAddress(tvAddress.getText() + address);
         body.setPassword(Utils.encryptMD5(pwd2));
         body.setLat(lat);
@@ -185,6 +204,132 @@ public class RegisterActivity extends BaseActivity {
 
             lat = latlng[0];
             lng = latlng[1];
+        }
+    }
+
+    private void showBrandListDialog(List<ElevatorInfo> infoList) {
+        View view = View.inflate(this, R.layout.layout_dialog_list, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initListDialogView(dialog, view, infoList);
+
+        dialog.show();
+    }
+
+    private void initListDialogView(final Dialog dialog, View view, List<ElevatorInfo> infoList) {
+
+        ListView listView = (ListView) view.findViewById(R.id.listView);
+        ListViewAdapter adapter = new ListViewAdapter(this, infoList);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.dismiss();
+                ElevatorInfo info = (ElevatorInfo) view.getTag();
+
+                if (info.getName().equals("其他")) {
+                    showEditDialog();
+
+                } else {
+                    tvBrand.setText(info.getName());
+
+                }
+
+            }
+        });
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void showEditDialog() {
+
+        View view = View.inflate(this, R.layout.layout_edit_dialog, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setView(view);
+
+        Dialog dialog = builder.create();
+
+        initDialogView(dialog, view);
+
+        dialog.show();
+
+    }
+
+    private void initDialogView(final Dialog dialog, final View view) {
+
+        view.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        view.findViewById(R.id.btn_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText etBrand = (EditText) view.findViewById(R.id.et_brand);
+                String brand = etBrand.getText().toString();
+
+                if (Utils.isEmpty(brand)) {
+                    showToast("请填写您的电梯品牌");
+                    return;
+                }
+
+                tvBrand.setText(brand);
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private class ListViewAdapter extends BaseAdapter{
+
+        private List<ElevatorInfo> infos;
+
+        private Context context;
+
+        public ListViewAdapter(Context context, List<ElevatorInfo> list) {
+            this.context = context;
+            this.infos = list;
+        }
+
+        @Override
+        public int getCount() {
+            return this.infos.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return this.infos.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (null == convertView) {
+                convertView =  View.inflate(this.context, R.layout.layout_textview_item, null);
+            }
+
+            convertView.setTag(this.infos.get(position));
+            TextView tvContent = (TextView) convertView.findViewById(R.id.tv_content);
+
+            tvContent.setText(this.infos.get(position).getName());
+
+            return convertView;
         }
     }
 }

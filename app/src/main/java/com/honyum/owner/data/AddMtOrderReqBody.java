@@ -28,6 +28,11 @@ public class AddMtOrderReqBody extends RequestBody {
     private String address;
     private String loginname;
     private String mainttypeId;
+
+    private String contacts;
+
+    private String contactsTel;
+
     private double lat;
     private double lng;
     //购买数量
@@ -127,5 +132,21 @@ public class AddMtOrderReqBody extends RequestBody {
 
     public void setMainttypeId(String mainttypeId) {
         this.mainttypeId = mainttypeId;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getContactsTel() {
+        return contactsTel;
+    }
+
+    public void setContactsTel(String contactsTel) {
+        this.contactsTel = contactsTel;
     }
 }

@@ -35,6 +35,10 @@ public class AddRepairReqBody extends RequestBody {
     private double lat;
     private double lng;
 
+    private String contacts;
+
+    private String contactsTel;
+
     public String getTel() {
         return tel;
     }
@@ -137,5 +141,21 @@ public class AddRepairReqBody extends RequestBody {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getContactsTel() {
+        return contactsTel;
+    }
+
+    public void setContactsTel(String contactsTel) {
+        this.contactsTel = contactsTel;
     }
 }

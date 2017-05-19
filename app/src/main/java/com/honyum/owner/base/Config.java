@@ -176,4 +176,22 @@ public class Config implements Serializable {
     public boolean isRunning() {
         return mPreferences.getBoolean("running", false);
     }
+
+    public void setLinkName(String name) {
+        mEditor.putString("link_name", name);
+        mEditor.commit();
+    }
+
+    public String getLinkName() {
+        return mPreferences.getString("link_name", getName());
+    }
+
+    public void setLinkTel(String tel) {
+        mEditor.putString("link_tel", tel);
+        mEditor.commit();
+    }
+
+    public String getLinkTel() {
+        return mPreferences.getString("link_tel", getTel());
+    }
 }

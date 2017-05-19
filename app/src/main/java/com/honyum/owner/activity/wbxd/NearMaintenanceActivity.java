@@ -208,7 +208,7 @@ public class NearMaintenanceActivity extends BaseActivity {
             }
         };
 
-        addTask(netTask);
+        addBackGroundTask(netTask);
     }
 
     private void markMtPro(MaintenanceProjectInfo info) {
@@ -339,17 +339,17 @@ public class NearMaintenanceActivity extends BaseActivity {
             if (1 == type) {
                 tvLevel1Top.setText("一级管家");
                 tvLevel1Mid.setText(info.getName());
-                tvLevel1Bottom.setText("$" + info.getPrice() + "/年");
+                tvLevel1Bottom.setText("￥" + info.getPrice() + "/年");
 
             } else if (2 == type) {
                 tvLevel2Top.setText("二级管家");
                 tvLevel2Mid.setText(info.getName());
-                tvLevel2Bottom.setText("$" + info.getPrice() + "/年");
+                tvLevel2Bottom.setText("￥" + info.getPrice() + "/年");
 
             } else if (3 == type) {
                 tvLevel3Top.setText("三级管家");
                 tvLevel3Mid.setText(info.getName());
-                tvLevel3Bottom.setText("$" + info.getPrice() + "/次");
+                tvLevel3Bottom.setText("￥" + info.getPrice() + "/次");
 
             }
         }

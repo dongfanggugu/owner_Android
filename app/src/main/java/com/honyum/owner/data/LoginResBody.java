@@ -19,6 +19,10 @@ public class LoginResBody extends ResponseBody {
     private String userId;
     private String userName;
 
+    private String contacts;
+
+    private String contactsTel;
+
     public String getUserName() {
         return userName;
     }
@@ -105,5 +109,21 @@ public class LoginResBody extends ResponseBody {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
+    }
+
+    public String getContactsTel() {
+        return contactsTel;
+    }
+
+    public void setContactsTel(String contactsTel) {
+        this.contactsTel = contactsTel;
     }
 }

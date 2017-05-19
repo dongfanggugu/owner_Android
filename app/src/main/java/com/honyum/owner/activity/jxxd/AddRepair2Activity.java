@@ -3,6 +3,7 @@ package com.honyum.owner.activity.jxxd;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.honyum.owner.R;
+import com.honyum.owner.activity.common.LinkModifyActivity;
+import com.honyum.owner.activity.wbxd.AddMtOrder2Activity;
 import com.honyum.owner.adapter.ElevatorFaultAdapter;
 import com.honyum.owner.base.BaseActivity;
 import com.honyum.owner.base.Constant;
@@ -34,6 +37,10 @@ public class AddRepair2Activity extends BaseActivity {
 
     private String repairTypeId;
 
+    private TextView mTvLinkName;
+
+    private TextView mTvLinkTel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,12 @@ public class AddRepair2Activity extends BaseActivity {
         initView();
 
         requestElevatorFault();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
     }
 
     private void requestElevatorFault() {
@@ -72,6 +85,19 @@ public class AddRepair2Activity extends BaseActivity {
         spElevatorFault = (Spinner) findViewById(R.id.sp_lift_fault_type);
         final EditText etFaultDescribe = (EditText) findViewById(R.id.et_lift_fault_describe);
         final TextView tvSelDateTime = (TextView) findViewById(R.id.tv_sel_datetime);
+
+        mTvLinkName = (TextView) findViewById(R.id.tv_link_name);
+        mTvLinkTel = (TextView) findViewById(R.id.tv_link_tel);
+
+        mTvLinkName.setText(getConfig().getLinkName());
+        mTvLinkTel.setText(getConfig().getLinkTel());
+
+        findViewById(R.id.btn_modify).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AddRepair2Activity.this, LinkModifyActivity.class));
+            }
+        });
 
         spElevatorFault.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
