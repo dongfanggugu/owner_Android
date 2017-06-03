@@ -13,7 +13,6 @@ public class AboutActivity extends BaseActivity {
         setContentView(R.layout.activity_about);
         initTitleBar();
     }
-
     private void initTitleBar() {
         initTitleBar(R.id.title_about, "关于", R.mipmap.back, backClickListener, 0, null);
     }
